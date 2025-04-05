@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Pokedex</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='pokedex.css') }}">
+      <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  {% if error %}
+      <p> {{ error }} </p>
+  {% endif %}
+
+  {% if pokemon %}
+  <img src="../static/pokedex.png" class="fixed top-0 left-1/2 transform -translate-x-1/2">
+
+      <p>ID:          {{ pokemon.id }}</p>
+      <p>Name:        {{ pokemon.nome }}</p>
+      <p>Types:       {{ pokemon.tipos | join(', ') }}</p>
+      <p>Description: {{ pokemon.descricao }}</p>
+      <p>Height:      {{ pokemon.altura }}</p>
+      <p>Weight:      {{ pokemon.peso }}</p>
+
+      <div class="sprite">
+            <p>Sprite: </p>
+             <img src="{{ pokemon.sprite }}" alt="{{ pokemon.nome }}">
+      </div>
+      
+      {% if pokemon.id > 1 %}
+  <a href="{{ url_for('pokemon_anterior', id=pokemon.id) }}">
+    <button>Back</button>
+  </a>
+{% else %}
+  <button disabled style="opacity: 0.5; cursor: not-allowed;">Back</button>
+{% endif %}
+
+{% if pokemon.id < 1025 %}
+  <a href="{{ url_for('proximo_pokemon', id=pokemon.id) }}">
+    <button>Next</button>
+  </a>
+{% else %}
+  <button disabled style="opacity: 0.5; cursor: not-allowed;">Next</button>
+{% endif %}
+
+
+      
+      
+  {% endif %}
+</body>
+</html>
