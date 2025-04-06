@@ -2,9 +2,11 @@ from flask import Flask, render_template, redirect, url_for, request, flash
 from projeto import app
 import requests
 
+app.secret_key = 'blablablaawdaw'
+
 @app.route('/', methods=['GET'])
 def mostrar_pokemon():
-    id = request.args.get('id', default=1, type=int)
+    id = request.args.get('id', default=None, type=int)
     nome = request.args.get('pokemon', default=None, type=str)
     pokemon = None
 
@@ -24,24 +26,21 @@ def mostrar_pokemon():
                 'peso': dados['weight'] / 10,
                 'sprite': dados['sprites']['front_default']
             }
-            
+
             species_url = dados['species']['url']
             species_resposta = requests.get(species_url)
             descricao = ''
             if species_resposta.status_code == 200:
-                  species_data = species_resposta.json()
-                  for entry in species_data['flavor_text_entries']:
-                        if entry['language']['name'] == 'en':
-                              descricao = entry['flavor_text'].replace('\n', ' ').replace('\f', ' ')
-                              break
-                        
+                species_data = species_resposta.json()
+                for entry in species_data['flavor_text_entries']:
+                    if entry['language']['name'] == 'en':
+                        descricao = entry['flavor_text'].replace('\n', ' ').replace('\f', ' ')
+                        break
+
             pokemon['descricao'] = descricao
 
-        else:
-            flash('Pokemon not found!')
-            return redirect(url_for('mostrar_pokemon'))
-        
     return render_template('pokedex.html', pokemon=pokemon)
+
 
 @app.route('/proximo_pokemon')
 def proximo_pokemon():
@@ -61,10 +60,33 @@ def pokemon_anterior():
 def buscar_pokemon():
     pokemon_inserido = request.args.get('poke', '').strip().lower()
 
+    if not pokemon_inserido:
+        flash('Invalid data, please search for Pokemon ID or name!')
+        return redirect(url_for('mostrar_pokemon', id=1))
+
     if pokemon_inserido.isalpha():
-        return redirect(url_for('mostrar_pokemon', pokemon=pokemon_inserido))
-    elif pokemon_inserido.isdigit():    
-        return redirect(url_for('mostrar_pokemon', id=pokemon_inserido))
+        url = f'https://pokeapi.co/api/v2/pokemon/{pokemon_inserido}'
+        resposta = requests.get(url)
+        if resposta.status_code == 200:
+            return redirect(url_for('mostrar_pokemon', pokemon=pokemon_inserido))
+        else:
+            flash(f'Invalid data, please search for Pokemon ID or name!')
+            return redirect(url_for('mostrar_pokemon', id=1))
+
+    elif pokemon_inserido.isdigit():
+        poke_id = int(pokemon_inserido)
+        if poke_id > 0 and poke_id <= 1025:
+            url = f'https://pokeapi.co/api/v2/pokemon/{poke_id}'
+            resposta = requests.get(url)
+            if resposta.status_code == 200:
+                return redirect(url_for('mostrar_pokemon', id=poke_id))
+            else:
+                flash(f'Invalid data, please search for Pokemon ID or name!')
+                return redirect(url_for('mostrar_pokemon', id=1))
+        else:
+            flash('Invalid data, please search for Pokemon ID or name!')
+            return redirect(url_for('mostrar_pokemon', id=1))
     else:
         flash('Invalid data, please search for Pokemon ID or name!')
-        return redirect(url_for('mostrar_pokemon'))
+        return redirect(url_for('mostrar_pokemon', id=1))
+

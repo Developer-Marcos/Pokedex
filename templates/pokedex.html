@@ -8,7 +8,7 @@
       <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-  {% if pokemon %}
+  {% if pokemon or id %}
 
       <p>ID:                             {{ pokemon.id }}</p>
       <p class="capitalize">Name:        {{ pokemon.nome }}</p>
@@ -46,9 +46,11 @@
       
 {% with messages = get_flashed_messages() %}
   {% if messages %}
-    <div id="flash-message" class="flash">
-      {{ messages[0] }}
-    </div>
+    <ul class="flash-messages">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
   {% endif %}
 {% endwith %}
 
