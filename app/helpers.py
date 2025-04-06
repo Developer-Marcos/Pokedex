@@ -50,4 +50,5 @@ def chamar_api(id, nome):
 
 def error_e_redirecionamento():
     flash('Invalid data, please search for Pokemon ID or name!')
-    return redirect(url_for('mostrar_pokemon', id=1))
+    return redirect(url_for('main.mostrar_pokemon', id=1))
+

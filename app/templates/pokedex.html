@@ -31,7 +31,7 @@
 
     <nav>
       {% if pokemon.id > 1 %}
-        <a href="{{ url_for('pokemon_anterior', id=pokemon.id) }}">
+        <a href="{{ url_for('main.pokemon_anterior', id=pokemon.id) }}">
           <button>Back</button>
         </a>
       {% else %}
@@ -39,7 +39,7 @@
       {% endif %}
 
       {% if pokemon.id < 1025 %}
-        <a href="{{ url_for('proximo_pokemon', id=pokemon.id) }}">
+        <a href="{{ url_for('main.proximo_pokemon', id=pokemon.id) }}">
           <button>Next</button>
         </a>
       {% else %}
@@ -48,7 +48,7 @@
     </nav>
 
     <section>
-      <form action="{{ url_for('buscar_pokemon') }}" method="get" autocomplete="off">
+      <form action="{{ url_for('main.buscar_pokemon') }}" method="get" autocomplete="off">
         <input type="text" name="poke" placeholder="Name or pokemon ID" required>
         <button type="submit">Search</button>
       </form>
