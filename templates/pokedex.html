@@ -13,14 +13,13 @@
   {% endif %}
 
   {% if pokemon %}
-  <img src="../static/pokedex.png" class="fixed top-0 left-1/2 transform -translate-x-1/2">
 
       <p>ID:          {{ pokemon.id }}</p>
-      <p>Name:        {{ pokemon.nome }}</p>
-      <p>Types:       {{ pokemon.tipos | join(', ') }}</p>
+      <p class="capitalize">Name:        {{ pokemon.nome }}</p>
+      <p class="capitalize">Types:       {{ pokemon.tipos | join(', ') }}</p>
       <p>Description: {{ pokemon.descricao }}</p>
-      <p>Height:      {{ pokemon.altura }}</p>
-      <p>Weight:      {{ pokemon.peso }}</p>
+      <p>Height:      {{ pokemon.altura }} m</p>
+      <p>Weight:      {{ pokemon.peso }} kg</p>
 
       <div class="sprite">
             <p>Sprite: </p>
@@ -43,9 +42,13 @@
   <button disabled style="opacity: 0.5; cursor: not-allowed;">Next</button>
 {% endif %}
 
+<form action="/buscar_pokemon" method="get">
+  <input type="text" name="poke" placeholder="Name or pokemon ID" required>
+  <button type="submit">Search</button>
+</form>
 
       
       
-  {% endif %}
+{% endif %}
 </body>
 </html>

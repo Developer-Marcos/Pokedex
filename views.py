@@ -21,8 +21,8 @@ def mostrar_pokemon():
                 'nome': dados['name'],
                 'id': dados['id'], 
                 'tipos': [t['type']['name'] for t in dados['types']],
-                'altura': dados['height'],
-                'peso': dados['weight'],
+                'altura': dados['height'] / 10,
+                'peso': dados['weight'] / 10,
                 'sprite': dados['sprites']['front_default']
             }
             
