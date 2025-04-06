@@ -1,59 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Pokedex</title>
-      <link rel="stylesheet" href="{{ url_for('static', filename='pokedex.css') }}">
-      <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokedex</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='pokedex.css') }}">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
   {% if pokemon or id %}
 
-      <p>ID:                             {{ pokemon.id }}</p>
-      <p class="capitalize">Name:        {{ pokemon.nome }}</p>
-      <p class="capitalize">Types:       {{ pokemon.tipos | join(', ') }}</p>
-      <p>Description:                    {{ pokemon.descricao }}</p>
-      <p>Height:                         {{ pokemon.altura }} m</p>
-      <p>Weight:                         {{ pokemon.peso }} kg</p>
+  <main>
 
-      <div class="sprite">
-            <p>Sprite: </p>
-             <img src="{{ pokemon.sprite }}" alt="{{ pokemon.nome }}">
-      </div>
-      
+    <header>
+      <p>ID: {{ pokemon.id }}</p>
+      <h1 class="capitalize">{{ pokemon.nome }}</h1>
+    </header>
+
+    <section>
+      <p class="capitalize">Types: {{ pokemon.tipos | join(', ') }}</p>
+      <p>Description: {{ pokemon.descricao }}</p>
+      <p>Height: {{ pokemon.altura }} m</p>
+      <p>Weight: {{ pokemon.peso }} kg</p>
+    </section>
+
+    <figure>
+      <figcaption>Sprite:</figcaption>
+      <img src="{{ pokemon.sprite }}" alt="{{ pokemon.nome }}">
+    </figure>
+
+    <nav>
       {% if pokemon.id > 1 %}
-  <a href="{{ url_for('pokemon_anterior', id=pokemon.id) }}">
-    <button>Back</button>
-  </a>
-{% else %}
-  <button disabled style="opacity: 0.5; cursor: not-allowed;">Back</button>
-{% endif %}
+        <a href="{{ url_for('pokemon_anterior', id=pokemon.id) }}">
+          <button>Back</button>
+        </a>
+      {% else %}
+        <button disabled>Back</button>
+      {% endif %}
 
-{% if pokemon.id < 1025 %}
-  <a href="{{ url_for('proximo_pokemon', id=pokemon.id) }}">
-    <button>Next</button>
-  </a>
-{% else %}
-  <button disabled style="opacity: 0.5; cursor: not-allowed;">Next</button>
-{% endif %}
+      {% if pokemon.id < 1025 %}
+        <a href="{{ url_for('proximo_pokemon', id=pokemon.id) }}">
+          <button>Next</button>
+        </a>
+      {% else %}
+        <button disabled>Next</button>
+      {% endif %}
+    </nav>
 
-<form action="{{ url_for('buscar_pokemon') }}" method="get" autocomplete="off">
-  <input type="text" name="poke" placeholder="Name or pokemon ID" required>
-  <button type="submit">Search</button>
-</form>
+    <section>
+      <form action="{{ url_for('buscar_pokemon') }}" method="get" autocomplete="off">
+        <input type="text" name="poke" placeholder="Name or pokemon ID" required>
+        <button type="submit">Search</button>
+      </form>
+    </section>
 
-      
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class="flash-messages">
-      {% for message in messages %}
-        <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
+    <aside>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+    </aside>
+
+  </main>
+
   {% endif %}
-{% endwith %}
-
-{% endif %}
 </body>
 </html>
