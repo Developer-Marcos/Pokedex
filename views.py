@@ -1,17 +1,16 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, flash
 from projeto import app
 import requests
 
-app = Flask(__name__)
-
 @app.route('/', methods=['GET'])
 def mostrar_pokemon():
-    id = request.args.get('id', 1, type=int)
+    id = request.args.get('id', default=1, type=int)
+    nome = request.args.get('pokemon', default=None, type=str)
     pokemon = None
-    error = None
 
-    if id:
-        url = f'https://pokeapi.co/api/v2/pokemon/{id}'
+    if id or nome:
+        alvo = id if id else nome.lower()
+        url = f'https://pokeapi.co/api/v2/pokemon/{alvo}'
         resposta = requests.get(url)
 
         if resposta.status_code == 200:
@@ -39,9 +38,10 @@ def mostrar_pokemon():
             pokemon['descricao'] = descricao
 
         else:
-            error = 'Pokémon não encontrado.'
-
-    return render_template('pokedex.html', pokemon=pokemon, error=error)
+            flash('Pokemon not found!')
+            return redirect(url_for('mostrar_pokemon'))
+        
+    return render_template('pokedex.html', pokemon=pokemon)
 
 @app.route('/proximo_pokemon')
 def proximo_pokemon():
@@ -50,10 +50,21 @@ def proximo_pokemon():
         id += 1
     return redirect(url_for('mostrar_pokemon', id=id))
 
-
 @app.route('/pokemon_anterior')
 def pokemon_anterior():
       id = request.args.get('id', 1, type=int)
       if id != 1:
             id -= 1
       return redirect(url_for('mostrar_pokemon', id=id))
+
+@app.route('/buscar_pokemon', methods=['GET'])
+def buscar_pokemon():
+    pokemon_inserido = request.args.get('poke', '').strip().lower()
+
+    if pokemon_inserido.isalpha():
+        return redirect(url_for('mostrar_pokemon', pokemon=pokemon_inserido))
+    elif pokemon_inserido.isdigit():    
+        return redirect(url_for('mostrar_pokemon', id=pokemon_inserido))
+    else:
+        flash('Invalid data, please search for Pokemon ID or name!')
+        return redirect(url_for('mostrar_pokemon'))
