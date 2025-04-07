@@ -1,4 +1,4 @@
-# Run this file to start the pokedex! Go to /pokedex
+# Run this file to start the pokedex!
 
 from app import create_app
 
