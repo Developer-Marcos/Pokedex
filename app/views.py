@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for
 from .helpers import chamar_api, error_e_redirecionamento
 import requests
 
