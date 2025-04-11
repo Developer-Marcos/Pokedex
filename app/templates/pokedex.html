@@ -6,68 +6,82 @@
   <title>Pokedex</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='pokedex.css') }}">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            pixel: ['"Pixelify Sans"', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap" rel="stylesheet">
 </head>
-<body>
-  {% if pokemon or id %}
 
-  <main>
+<body style="background-image: url('{{ url_for('static', filename='pokemon_background.jpg') }}');" class="bg-cover bg-center h-screen font-pixel">
 
-    <header>
-      <p>ID: {{ pokemon.id }}</p>
-      <h1 class="capitalize">{{ pokemon.nome }}</h1>
-    </header>
+
+  <div class="flex flex-col items-center justify-center min-h-screen space-y-4">
+
+    <main class="inline-block border-2 border-red-500 p-3 max-w-xs space-y-2 bg-red-300  rounded">
+  
+      <header>
+        <p class="inline-block border-2 border-red-500 p-1  bg-red-100"><b>ID:</b> {{ pokemon.id }}</p>
+        <h1 class="inline-block capitalize border-2 border-red-500 p-1  bg-red-100"><b>Name:</b> {{ pokemon.nome }}</h1>
+      </header>
+  
+      <section class="space-y-2">
+        <p class="inline-block border-2  border-red-500 p-1 bg-red-100"><b>Description:</b> {{ pokemon.descricao }}</p>
+        <p class="inline-block border-2  border-red-500 p-1 bg-red-100"><b>Height:</b> {{ pokemon.altura }} m</p>
+        <p class="inline-block border-2  border-red-500 p-1 bg-red-100"><b>Weight:</b> {{ pokemon.peso }} kg</p>
+        <p class="capitalize inline-block border-2  border-red-500 p-1 bg-red-100"><b>Types:</b> {{ pokemon.tipos | join(', ') }}</p>
+      </section>
+  
+      <figure class="inline-block border-2 border-red-500 p-1 bg-red-100">
+        <figcaption><b>Sprite:</b></figcaption>
+        <img class="w-24 h-24" src="{{ pokemon.sprite }}" alt="{{ pokemon.nome }}">
+      </figure>
+  
+      <nav>
+        {% if pokemon.id > 1 %}
+          <a href="{{ url_for('main.pokemon_anterior', id=pokemon.id) }}">
+            <button class="bg-red-500 text-white px-4 py-2 hover:bg-red-100 hover:text-black rounded">Back</button>
+          </a>
+        {% else %}
+          <button class="bg-red-100 text-red-400 px-4 py-2 rounded" disabled>Back</button>
+        {% endif %}
+  
+        {% if pokemon.id < 1025 %}
+          <a href="{{ url_for('main.proximo_pokemon', id=pokemon.id) }}">
+            <button class="bg-red-500 text-white px-4 py-2 hover:bg-red-100 hover:text-black rounded">Next</button>
+          </a>
+        {% else %}
+          <button class="bg-red-100 text-red-400 px-4 py-2 rounded" disabled>Next</button>
+        {% endif %}
+      </nav>
+  
+      <aside>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul>
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+      </aside>
+    </main>
 
     <section>
-      <p class="capitalize">Types: {{ pokemon.tipos | join(', ') }}</p>
-      <p>Description: {{ pokemon.descricao }}</p>
-      <p>Height: {{ pokemon.altura }} m</p>
-      <p>Weight: {{ pokemon.peso }} kg</p>
-    </section>
-
-    <figure>
-      <figcaption>Sprite:</figcaption>
-      <img src="{{ pokemon.sprite }}" alt="{{ pokemon.nome }}">
-    </figure>
-
-    <nav>
-      {% if pokemon.id > 1 %}
-        <a href="{{ url_for('main.pokemon_anterior', id=pokemon.id) }}">
-          <button>Back</button>
-        </a>
-      {% else %}
-        <button disabled>Back</button>
-      {% endif %}
-
-      {% if pokemon.id < 1025 %}
-        <a href="{{ url_for('main.proximo_pokemon', id=pokemon.id) }}">
-          <button>Next</button>
-        </a>
-      {% else %}
-        <button disabled>Next</button>
-      {% endif %}
-    </nav>
-
-    <section>
-      <form action="{{ url_for('main.buscar_pokemon') }}" method="get" autocomplete="off">
-        <input type="text" name="poke" placeholder="Name or pokemon ID" required>
-        <button type="submit">Search</button>
+      <form action="{{ url_for('main.buscar_pokemon') }}" method="get" autocomplete="off" class="flex space-x-2">
+        <input type="text" name="poke" placeholder="Name or pokemon ID" required class="border-2  p-1 rounded border-red-500">
+        <button type="submit" class="border px-2 py-1 bg-red-500 text-white rounded">Search</button>
       </form>
     </section>
 
-    <aside>
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <ul>
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-      {% endwith %}
-    </aside>
+  </div>
 
-  </main>
-
-  {% endif %}
 </body>
-</html>
