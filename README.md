@@ -15,6 +15,8 @@ Use the Pokemon ID or name to find a specific Pokemon.
 
 <hr>
 
+![video](pokedex.gif)
+
 <hr>
 
 If you want to use the project:
