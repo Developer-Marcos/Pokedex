@@ -15,7 +15,7 @@ Use the Pokemon ID or name to find a specific Pokemon.
 
 <hr>
 
-![video](pokedex.gif)
+![video](app/static/pokedex.gif)
 
 <hr>
 
