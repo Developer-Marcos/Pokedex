@@ -19,8 +19,9 @@ Use the Pokemon ID or name to find a specific Pokemon.
 
 <hr>
 
-If you want to use the project:
+If you want to use the project: 
    ```bash
    git clone https://github.com/Developer-Marcos/Pokedex.git
 ```
+###### Run "projeto.py" to start the app.
 ###### Don't forget to mention me! Please.
